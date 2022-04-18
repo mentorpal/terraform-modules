@@ -1,18 +1,9 @@
-locals {
-  tags = merge(
-    var.tags,
-    {
-      PROJECT = var.project_name
-    }
-  )
-}
-
 module "build" {
   source    = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.38.0"
   name      = "build"
   namespace = var.project_name
   stage     = "qa"
-  tags      = local.tags
+  tags      = var.tags
 
   build_image         = var.build_image
   privileged_mode     = var.builds_privileged_mode
@@ -22,7 +13,7 @@ module "build" {
   local_cache_modes   = var.build_local_cache_modes
   cache_type          = var.build_cache_type
 
-  extra_permissions = var.allow_git_folder_access_in_pipeline_build ? local.codestar_access_permission : []
+  extra_permissions = ["codestar-connections:UseConnection"]
 }
 
 module "deploy_staging" {
@@ -32,7 +23,7 @@ module "deploy_staging" {
   stage               = "qa"
   build_compute_type  = var.deploys_compute_type
   report_build_status = false
-  tags                = local.tags
+  tags                = var.tags
 
   build_image       = var.deploy_image
   privileged_mode   = var.deploys_privileged_mode
@@ -49,7 +40,7 @@ module "deploy_prod" {
   stage               = "prod"
   build_compute_type  = var.deploys_compute_type
   report_build_status = false
-  tags                = local.tags
+  tags                = var.tags
 
   build_image       = var.deploy_image
   privileged_mode   = var.deploys_privileged_mode
@@ -72,7 +63,7 @@ resource "aws_s3_bucket" "pipeline_s3" {
       days = 180
     }
   }
-  tags = local.tags
+  tags = var.tags
 }
 
 resource "aws_codepipeline" "pipeline" {
@@ -97,9 +88,9 @@ resource "aws_codepipeline" "pipeline" {
 
       configuration = {
         ConnectionArn        = var.codestar_connection_arn
-        FullRepositoryId     = "${var.github_org}/${local.github_repo_name}"
+        FullRepositoryId     = "${var.github_org}/${var.github_repo_name}"
         BranchName           = var.github_branch
-        OutputArtifactFormat = var.allow_git_folder_access_in_pipeline_build ? "CODEBUILD_CLONE_REF" : "CODE_ZIP"
+        OutputArtifactFormat = "CODEBUILD_CLONE_REF"
         DetectChanges        = true
       }
     }

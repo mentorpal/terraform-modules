@@ -11,14 +11,7 @@ Created pipeline contains:
   - Step for manual approval of production deployment
   - CodeBuild for Deployment to production env
 
-## Prerequsities
-1. Have AWS provider defined
-```hcl
-provider "aws" {
-  //...
-}
-```
-2. Declare a module and override the defaults as necessary
-3. Have present buildspec files for CodeBuild steps. By default they should be in `cicd` folder located in root folder of your projects.
-  - `buildspec.yml` - steps for build step of release pipeline
-  - `deployspec.yml` - steps for deployment step of release pipeline
+Buildspec files for CodeBuild steps (in `cicd` folder by default):
+  - `buildspec.yml`
+  - `deployspec_staging.yml`
+  - `deployspec_prod.yml`
