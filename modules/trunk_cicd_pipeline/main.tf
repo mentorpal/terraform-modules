@@ -240,7 +240,7 @@ resource "aws_iam_policy" "s3_pipeline_access" {
     {
       "Effect":"Allow",
       "Action": ["s3:*"],
-      "Resource": "${aws_s3_bucket.pipeline_s3.bucket}"
+      "Resource": "${aws_s3_bucket.pipeline_s3.arn}"
     }
   ]
 }
