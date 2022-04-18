@@ -1,14 +1,9 @@
 # Contributing guidelines
 
-Before committing your changes, make sure to have necessary tools installed in order for automatic code formatting
-and docs generation to work. Pre-commits are based on https://github.com/antonbabenko/pre-commit-terraform
-
-Steps to take (only first time)
-
 1. Install dependencies
 
 ```zsh
-brew install pre-commit gawk terraform-docs
+brew install pre-commit terraform-docs
 ```
 
 2. Install the git hook scripts
@@ -27,11 +22,10 @@ pre-commit run -a
 
 4. Done
 
-Next time you commit, pre-commit hooks will trigger to check:
+pre-commit hooks will check:
 
-- format terraform config
 - validate terraform config
-- generate readmes for modules
 - check yaml formattings
-- fix trailing whitespaces
+- format terraform config
 - fix missing `\n` at the end of files
+- fix trailing whitespaces

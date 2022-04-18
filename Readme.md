@@ -1,17 +1,27 @@
 # Content
+
 This repository contains Terraform modules.
 
 All modules have their description in their directory.
 
-## How to set pre-commit hooks
-Follow documentation at https://github.com/antonbabenko/pre-commit-terraform and https://pre-commit.com/
+## How to setup pre-commit hooks
+Follow the documentation at https://github.com/antonbabenko/pre-commit-terraform and https://pre-commit.com/
 
-TLDR - just run one time only (after cloning the repo)
-```zsh
-brew install pre-commit #install pre-commit
-pre-commit install # configure pre-commit for current repository
+Run once:
+
+```bash
+# Install dependencies
+brew install pre-commit terraform-docs
+pre-commit install
+
+# test pre-commit hooks
+pre-commit run -a
 ```
 
+pre-commit hooks:
 
-## Contributing
-Please before contributing your changes check the [contributing guidelines](contributing.md)
+- validate terraform config
+- check yaml formattings
+- format terraform config
+- fix missing `\n` at the end of files
+- fix trailing whitespaces
