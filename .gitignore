@@ -4,6 +4,10 @@
 *.tfstate
 *.tfstate.*
 
+# npm
+node_modules
+
 # Editors
 .vscode/
 .idea/
+*~
