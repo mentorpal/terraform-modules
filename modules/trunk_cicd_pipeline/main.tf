@@ -316,6 +316,59 @@ resource "aws_iam_policy" "create_test_report" {
 EOF
 }
 
+resource "aws_iam_policy" "deploy" {
+  name        = "${var.project_name}-deploy"
+  description = "Allow CICD deploy for ${var.project_name} to manage resources"
+  policy      = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect":"Allow",
+      "Action": [
+        "iam:GetRole",
+        "iam:CreateRole",
+        "iam:DeleteRole",
+        "iam:PutRolePolicy",
+        "iam:PassRole",
+        "s3:CreateBucket",
+        "s3:DeleteObject",
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:ListBucket",
+        "cloudformation:CreateStack",
+        "cloudformation:DescribeStacks",
+        "cloudformation:DescribeStackEvents",
+        "cloudformation:DescribeStackResource",
+        "cloudformation:DescribeStackResources",
+        "cloudformation:CreateUploadBucket",
+        "cloudformation:UpdateStack",
+        "cloudformation:ValidateTemplate",
+        "dynamodb:CreateTable",
+        "dynamodb:DescribeTable",
+        "lambda:CreateFunction",
+        "lambda:GetFunctionConfiguration",
+        "lambda:ListVersionsByFunction",
+        "lambda:PublishVersion",
+        "lambda:UpdateFunctionCode",
+        "lambda:GetFunction",
+        "lambda:AddPermission",
+        "execute-api:Invoke",
+        "apigateway:DELETE",
+        "apigateway:PUT",
+        "apigateway:POST",
+        "apigateway:GET",
+        "logs:DescribeLogGroups",
+        "logs:CreateLogGroup",
+        "logs:DeleteLogGroup"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy_attachment" "access_to_cicd_bucket_by_build" {
   policy_arn = aws_iam_policy.s3_pipeline_access.arn
   role       = module.build.role_id
@@ -333,6 +386,16 @@ resource "aws_iam_role_policy_attachment" "access_to_cicd_bucket_by_deploy_stagi
 
 resource "aws_iam_role_policy_attachment" "access_to_cicd_bucket_by_deploy_prod" {
   policy_arn = aws_iam_policy.s3_pipeline_access.arn
+  role       = module.deploy_prod.role_id
+}
+
+resource "aws_iam_role_policy_attachment" "deploy_staging" {
+  policy_arn = aws_iam_policy.deploy.arn
+  role       = module.deploy_staging.role_id
+}
+
+resource "aws_iam_role_policy_attachment" "deploy_prod" {
+  policy_arn = aws_iam_policy.deploy.arn
   role       = module.deploy_prod.role_id
 }
 
