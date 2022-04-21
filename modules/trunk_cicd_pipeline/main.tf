@@ -235,6 +235,7 @@ resource "aws_iam_policy" "s3_pipeline_access" {
       "Resource": [
         "${aws_s3_bucket.pipeline_s3.arn}",
         "${aws_s3_bucket.pipeline_s3.arn}/*"
+      ]
     }
   ]
 }
