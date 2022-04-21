@@ -213,8 +213,7 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
         "codestar-connections:UseConnection"
       ],
       "Resource": [
-        "${var.codestar_connection_arn}",
-        "${var.codestar_connection_arn}/*"
+        "${var.codestar_connection_arn}"
       ]
     }
   ]
@@ -225,14 +224,17 @@ EOF
 resource "aws_iam_policy" "s3_pipeline_access" {
   name        = "${var.project_name}-CicdS3Access"
   description = "Grant access to S3 for CICD pipeline for ${var.project_name}"
-  policy      = <<EOF
+  # need to add two resources, bucket itself and objects inside:
+  policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Effect":"Allow",
       "Action": ["s3:*"],
-      "Resource": "${aws_s3_bucket.pipeline_s3.arn}"
+      "Resource": [
+        "${aws_s3_bucket.pipeline_s3.arn}",
+        "${aws_s3_bucket.pipeline_s3.arn}/*"
     }
   ]
 }
