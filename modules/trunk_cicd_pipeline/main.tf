@@ -357,6 +357,7 @@ resource "aws_iam_policy" "deploy" {
         "lambda:GetFunction",
         "lambda:AddPermission",
         "execute-api:Invoke",
+        "ecr:*",
         "apigateway:DELETE",
         "apigateway:PUT",
         "apigateway:POST",
