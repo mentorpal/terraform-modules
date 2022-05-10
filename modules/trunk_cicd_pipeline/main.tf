@@ -349,9 +349,10 @@ resource "aws_iam_policy" "deploy" {
         "s3:DeleteBucket",
         "s3:PutObject",
         "s3:DeleteObject",
+        "s3:PutBucketCORS",
         "s3:PutBucketPolicy",
-        "s3:DeleteBucketPolicy",
         "s3:PutBucketAcl",
+        "s3:DeleteBucketPolicy",
         "s3:PutEncryptionConfiguration"
       ],
       "Resource": "*"
