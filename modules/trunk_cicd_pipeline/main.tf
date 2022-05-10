@@ -334,6 +334,7 @@ resource "aws_iam_policy" "deploy" {
         "sqs:*",
         "ecr:*",
         "logs:*",
+        "s3:*",
         "execute-api:*",
         "apigateway:*",
         "dynamodb:*",
@@ -342,18 +343,7 @@ resource "aws_iam_policy" "deploy" {
         "iam:CreateRole",
         "iam:DeleteRole",
         "iam:PutRolePolicy",
-        "iam:PassRole",
-        "s3:List*",
-        "s3:Get*",
-        "s3:CreateBucket",
-        "s3:DeleteBucket",
-        "s3:PutObject",
-        "s3:DeleteObject",
-        "s3:PutBucketCORS",
-        "s3:PutBucketPolicy",
-        "s3:PutBucketAcl",
-        "s3:DeleteBucketPolicy",
-        "s3:PutEncryptionConfiguration"
+        "iam:PassRole"
       ],
       "Resource": "*"
     }
