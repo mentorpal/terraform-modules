@@ -96,3 +96,9 @@ variable "export_pipeline_info" {
   default     = false
   description = "Export CodePipeline name and ARN to SSM"
 }
+
+variable "enable_status_notifications" {
+  type        = bool
+  default     = false
+  description = "If enabled it configures pipeline to send SNS notifications to SSM:/shared/sns_cicd_alert_topic_arn"
+}
