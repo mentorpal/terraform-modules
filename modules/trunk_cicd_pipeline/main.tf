@@ -335,6 +335,8 @@ resource "aws_iam_policy" "deploy" {
         "ecr:*",
         "logs:*",
         "s3:*",
+        "cloudfront:Get*",
+        "cloudfront:CreateInvalidation",
         "wafv2:GetWebACL",
         "wafv2:GetWebACLForResource",
         "wafv2:AssociateWebACL",
