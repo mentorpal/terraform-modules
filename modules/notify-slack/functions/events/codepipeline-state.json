@@ -1,0 +1,31 @@
+{
+  "account": "000000000000",
+  "detailType": "CodePipeline Action Execution State Change",
+  "region": "us-east-1",
+  "source": "aws.codepipeline",
+  "time": "2022-04-02T11:21:29Z",
+  "notificationRuleArn": "arn:aws:codestar-notifications:us-east-1:000000000000:notificationrule/ab499f2b2838ba3d9c9b5d0646396f70333f0644",
+  "detail": {
+    "pipeline": "milan-test-cicd-pipeline",
+    "execution-id": "b5ad6729-625f-4d59-9850-02a5d76483bc",
+    "stage": "DeployStaging",
+    "execution-result": {
+      "external-execution-url": "https://console.aws.amazon.com/codebuild/home?region=us-east-1#/builds/milan-test-qa-deploy:912c72d0-4bc6-444a-8f24-c08ec3914876/view/new",
+      "external-execution-id": "milan-test-qa-deploy:912c72d0-4bc6-444a-8f24-c08ec3914876"
+    },
+    "action": "DeployStaging",
+    "state": "SUCCEEDED",
+    "region": "us-east-1",
+    "type": {
+      "owner": "AWS",
+      "provider": "CodeBuild",
+      "category": "Build",
+      "version": "1"
+    },
+    "version": 1.0
+  },
+  "resources": [
+    "arn:aws:codepipeline:us-east-1:000000000000:milan-testing"
+  ],
+  "additionalAttributes": {}
+}
