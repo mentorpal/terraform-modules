@@ -1,3 +1,7 @@
+locals {
+  e2e_tests_stage = var.enable_e2e_tests ? [true] : []
+}
+
 module "build" {
   source    = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.38.0"
   name      = "build"
@@ -143,7 +147,7 @@ resource "aws_codepipeline" "pipeline" {
   }
 
   dynamic "stage" {
-    for_each = var.enable_e2e_tests
+    for_each = local.e2e_tests_stage
     content {
 
       name = "E2ETests"
