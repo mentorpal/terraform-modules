@@ -35,6 +35,15 @@ variable "deploy_image" {
   default     = "aws/codebuild/standard:5.0"
 }
 
+variable "enable_e2e_tests" {
+  description = "enable post-qa deploy end-to-end tests"
+  default     = false
+}
+
+variable "e2e_tests_buildspec" {
+  default = "cicd/e2espec.yml"
+}
+
 variable "build_buildspec" {
   default = "cicd/buildspec.yml"
 }

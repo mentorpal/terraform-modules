@@ -32,6 +32,17 @@ module "deploy_staging" {
   cache_type        = var.deploy_cache_type
 }
 
+module "e2e_tests" {
+  source    = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.38.0"
+  name      = "test"
+  namespace = var.project_name
+  stage     = "qa"
+  tags      = var.tags
+
+  build_image = var.build_image
+  buildspec   = var.e2e_tests_buildspec
+}
+
 module "deploy_prod" {
   source = "git::https://github.com/cloudposse/terraform-aws-codebuild.git?ref=tags/0.38.0"
 
@@ -42,12 +53,10 @@ module "deploy_prod" {
   report_build_status = false
   tags                = var.tags
 
-  build_image       = var.deploy_image
-  privileged_mode   = var.deploys_privileged_mode
-  buildspec         = var.deploy_prod_buildspec
-  local_cache_modes = var.deploy_local_cache_modes
-  cache_type        = var.deploy_cache_type
-
+  build_image     = var.deploy_image
+  privileged_mode = var.deploys_privileged_mode
+  buildspec       = var.deploy_prod_buildspec
+  cache_type      = var.deploy_cache_type
 }
 
 resource "aws_s3_bucket" "pipeline_s3" {
@@ -133,6 +142,28 @@ resource "aws_codepipeline" "pipeline" {
     }
   }
 
+  dynamic "stage" {
+    for_each = var.enable_e2e_tests
+    content {
+
+      name = "E2ETests"
+
+      action {
+        category        = "Build"
+        name            = "E2ETests"
+        owner           = "AWS"
+        provider        = "CodeBuild"
+        version         = "1"
+        input_artifacts = ["build_output"]
+
+        configuration = {
+          ProjectName   = module.e2e_tests.project_name
+          PrimarySource = "build_output"
+        }
+      }
+    }
+  }
+
   stage {
     name = "Approve"
 
@@ -204,6 +235,7 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
       "Resource": [
         "${module.deploy_prod.project_arn}",
         "${module.deploy_staging.project_arn}",
+        "${module.e2e_tests.project_arn}",
         "${module.build.project_arn}"
       ]
     },
@@ -376,6 +408,11 @@ resource "aws_iam_role_policy_attachment" "access_to_cicd_bucket_by_deploy_stagi
 resource "aws_iam_role_policy_attachment" "access_to_cicd_bucket_by_deploy_prod" {
   policy_arn = aws_iam_policy.s3_pipeline_access.arn
   role       = module.deploy_prod.role_id
+}
+
+resource "aws_iam_role_policy_attachment" "access_to_cicd_bucket_by_e2e_tests" {
+  policy_arn = aws_iam_policy.s3_pipeline_access.arn
+  role       = module.e2e_tests.role_id
 }
 
 resource "aws_iam_role_policy_attachment" "deploy_staging" {
