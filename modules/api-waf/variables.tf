@@ -3,6 +3,12 @@ variable "name" {
   description = "A unique name to identify this firewall"
 }
 
+variable "scope" {
+  type        = string
+  description = "either CLOUDFRONT or REGIONAL (default)"
+  default     = "REGIONAL"
+}
+
 variable "aws_region" {
   type        = string
   description = "AWS region"

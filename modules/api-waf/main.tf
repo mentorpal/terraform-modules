@@ -1,6 +1,6 @@
 resource "aws_wafv2_web_acl" "wafv2_webacl" {
   name  = "${var.name}-wafv2-webacl"
-  scope = "REGIONAL"
+  scope = var.scope
   tags  = var.tags
 
   default_action {
