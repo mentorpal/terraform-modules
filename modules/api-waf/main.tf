@@ -176,7 +176,7 @@ resource "aws_kinesis_firehose_delivery_stream" "waf_logs_kinesis_stream" {
   tags = var.tags
 }
 
-resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_conf_staging" {
+resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_conf" {
   count                   = var.enable_logging ? 1 : 0
   log_destination_configs = [aws_kinesis_firehose_delivery_stream.waf_logs_kinesis_stream[0].arn]
   resource_arn            = aws_wafv2_web_acl.wafv2_webacl.arn
