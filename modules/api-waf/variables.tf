@@ -22,6 +22,12 @@ variable "rate_limit" {
 variable "excluded_bot_rules" {
   type        = list(any)
   description = "which bot categories to allow, see https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-bot.html"
+  default     = []
+}
+
+variable "excluded_common_rules" {
+  type        = list(any)
+  description = "which rules to allow, see https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-baseline.html#aws-managed-rule-groups-baseline-crs"
   default = [
     "SizeRestrictions_BODY",  # 8kb is not enough
     "CrossSiteScripting_BODY" # flags legit image upload attemts

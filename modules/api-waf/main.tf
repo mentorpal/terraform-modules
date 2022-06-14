@@ -41,13 +41,11 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
         # see https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-baseline.html#aws-managed-rule-groups-baseline-crs
         name        = "AWSManagedRulesCommonRuleSet"
         vendor_name = "AWS"
-        excluded_rule {
-          # 8kb is not enough
-          name = "SizeRestrictions_BODY"
-        }
-        excluded_rule {
-          # flags legit image upload attemts
-          name = "CrossSiteScripting_BODY"
+        dynamic "excluded_rule" {
+          for_each = var.excluded_common_rules
+          content {
+            name = excluded_rule.value
+          }
         }
       }
     }
