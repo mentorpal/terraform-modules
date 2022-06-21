@@ -6,10 +6,12 @@ resource "aws_backup_plan" "backup_plan" {
     rule_name                = "${var.name}-backup-rule"
     target_vault_name        = aws_backup_vault.continuous_backup_vault.name
     enable_continuous_backup = true # works for s3 and rds
+    schedule                 = "cron(0 5 ? * * *)"
     completion_window        = 300
-    # start_window             = 60 default
+    start_window             = 60
     lifecycle {
-      delete_after = 30 # days
+      cold_storage_after = 0  # disabled
+      delete_after       = 30 # days
     }
   }
 }
