@@ -100,7 +100,7 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       }
       statement {
         ip_set_reference_statement {
-          arn = aws_wafv2_ip_set.amazon_whitelist_ipv4.arn
+          arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
         }
       }
 
@@ -122,7 +122,7 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       }
       statement {
         ip_set_reference_statement {
-          arn = aws_wafv2_ip_set.amazon_whitelist_ipv6.arn
+          arn = aws_wafv2_ip_set.amazon_whitelist_ipv6[0].arn
         }
       }
 
