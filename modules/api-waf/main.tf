@@ -1,3 +1,32 @@
+data "aws_ip_ranges" "mentor_us_regions" {
+  regions  = ["us-east-1", "us-west-2"]
+  services = ["amazon", "codebuild", "ec2"]
+}
+
+locals {
+  ipwhitelist = var.disable_bot_protection_for_amazon_ips ? [true] : []
+}
+
+resource "aws_wafv2_ip_set" "amazon_whitelist_ipv4" {
+  count              = var.disable_bot_protection_for_amazon_ips ? 1 : 0
+  name               = "${var.name}-amazon-ipv4"
+  description        = "Amazon IPv4 addresses"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV4"
+  addresses          = data.aws_ip_ranges.mentor_us_regions.cidr_blocks
+  tags               = var.tags
+}
+
+resource "aws_wafv2_ip_set" "amazon_whitelist_ipv6" {
+  count              = var.disable_bot_protection_for_amazon_ips ? 1 : 0
+  name               = "${var.name}-amazon-ipv6"
+  description        = "Amazon IPv6 addresses"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV6"
+  addresses          = data.aws_ip_ranges.mentor_us_regions.ipv6_cidr_blocks
+  tags               = var.tags
+}
+
 resource "aws_wafv2_web_acl" "wafv2_webacl" {
   name  = "${var.name}-wafv2-webacl"
   scope = var.scope
@@ -5,6 +34,12 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
 
   default_action {
     allow {}
+  }
+
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "${var.name}-wafv2-webacl"
+    sampled_requests_enabled   = true
   }
 
   rule {
@@ -57,9 +92,53 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
     }
   }
 
+  dynamic "rule" {
+    for_each = local.ipwhitelist
+    content {
+      name     = "IpSetRule-Whitelist-Amazon-IPv4"
+      priority = "4"
+      action {
+        allow {}
+      }
+      statement {
+        ip_set_reference_statement {
+          arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = false
+        metric_name                = "AWS-IPv4"
+        sampled_requests_enabled   = true
+      }
+    }
+  }
+
+  dynamic "rule" {
+    for_each = local.ipwhitelist
+    content {
+      name     = "IpSetRule-Whitelist-Amazon-IPv6"
+      priority = "6"
+      action {
+        allow {}
+      }
+      statement {
+        ip_set_reference_statement {
+          arn = aws_wafv2_ip_set.amazon_whitelist_ipv6[0].arn
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = false
+        metric_name                = "AWS-IPv6"
+        sampled_requests_enabled   = true
+      }
+    }
+  }
+
   rule {
     name     = "bot-control"
-    priority = 3
+    priority = 10
 
     override_action {
       none {}
@@ -84,13 +163,6 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       metric_name                = "AWS-BotControl-rule"
       sampled_requests_enabled   = true
     }
-  }
-
-
-  visibility_config {
-    cloudwatch_metrics_enabled = true
-    metric_name                = "${var.name}-wafv2-webacl"
-    sampled_requests_enabled   = true
   }
 }
 

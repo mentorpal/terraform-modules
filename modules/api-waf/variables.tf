@@ -45,3 +45,9 @@ variable "enable_logging" {
   default     = false
   description = "create s3 bucket to store firewall logs, and a kinesis stream to deliver them"
 }
+
+variable "disable_bot_protection_for_amazon_ips" {
+  type        = bool
+  default     = false
+  description = "should firewall exclude amazon ip range from bot protection rules"
+}
