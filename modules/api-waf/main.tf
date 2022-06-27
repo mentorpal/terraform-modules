@@ -1,6 +1,6 @@
 data "aws_ip_ranges" "mentor_us_regions" {
   regions  = ["us-east-1", "us-west-2"]
-  services = ["amazon"]
+  services = ["amazon", "codebuild", "ec2"]
 }
 
 locals {
