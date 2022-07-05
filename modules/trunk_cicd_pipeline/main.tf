@@ -57,10 +57,11 @@ module "deploy_prod" {
   report_build_status = false
   tags                = var.tags
 
-  build_image     = var.deploy_image
-  privileged_mode = var.deploys_privileged_mode
-  buildspec       = var.deploy_prod_buildspec
-  cache_type      = var.deploy_cache_type
+  build_image       = var.deploy_image
+  privileged_mode   = var.deploys_privileged_mode
+  buildspec         = var.deploy_prod_buildspec
+  cache_type        = var.deploy_cache_type
+  local_cache_modes = var.deploy_local_cache_modes
 }
 
 resource "aws_s3_bucket" "pipeline_s3" {
