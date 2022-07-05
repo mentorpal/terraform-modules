@@ -218,6 +218,7 @@ resource "aws_iam_role_policy_attachment" "access_to_cicd_bucket_by_deploy_prod"
 }
 
 resource "aws_iam_role_policy_attachment" "access_to_cicd_bucket_by_e2e_tests" {
+  count      = var.enable_e2e_tests ? 1 : 0
   policy_arn = aws_iam_policy.s3_pipeline_access.arn
   role       = module.e2e_tests.role_id
 }
