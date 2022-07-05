@@ -90,29 +90,23 @@ variable "build_compute_type" {
 }
 
 variable "build_cache_type" {
-  description = "https://github.com/cloudposse/terraform-aws-codebuild/tree/0.38.0"
+  description = "https://github.com/cloudposse/terraform-aws-codebuild#inputs"
   default     = "LOCAL"
 }
 
 variable "build_local_cache_modes" {
-  description = "CodeBuild settings for build dependencies: https://github.com/cloudposse/terraform-aws-codebuild/tree/0.38.0"
+  description = "CodeBuild settings for build dependencies: https://github.com/cloudposse/terraform-aws-codebuild#inputs"
   default     = ["LOCAL_SOURCE_CACHE", "LOCAL_DOCKER_LAYER_CACHE"]
 }
 
 variable "deploy_cache_type" {
-  description = "Deploy cache: https://github.com/cloudposse/terraform-aws-codebuild/tree/0.38.0"
+  description = "Deploy cache: https://github.com/cloudposse/terraform-aws-codebuild#inputs"
   default     = "LOCAL"
 }
 
 variable "deploy_local_cache_modes" {
-  description = "CodeBuild settings for dependencies: https://github.com/cloudposse/terraform-aws-codebuild/tree/0.38.0"
+  description = "CodeBuild settings for dependencies: https://github.com/cloudposse/terraform-aws-codebuild#inputs"
   default     = ["LOCAL_SOURCE_CACHE", "LOCAL_DOCKER_LAYER_CACHE"]
-}
-
-variable "export_pipeline_info" {
-  type        = bool
-  default     = false
-  description = "Export CodePipeline name and ARN to SSM"
 }
 
 variable "enable_status_notifications" {
