@@ -169,6 +169,7 @@ resource "aws_iam_policy" "deploy" {
         "ecr:*",
         "logs:*",
         "s3:*",
+        "states:*",
         "cloudwatch:*",
         "cloudfront:Get*",
         "cloudfront:CreateInvalidation",
