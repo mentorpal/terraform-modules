@@ -202,7 +202,9 @@ def format_codepipeline_event(message: Dict[str, Any]) -> Dict[str, Any]:
     pipeline = detail.get("pipeline")
     stage = detail.get("stage")
     state = detail.get("state")
-    color = "GREEN" if state == "SUCCEEDED" else "RED"
+    # this puts a vertical color bar, it's not possible to color text in Slack:
+    # https://api.slack.com/reference/surfaces/formatting#message_formatting
+    color = "good" if state == "SUCCEEDED" else "danger"
 
     return {
         "color": color,
