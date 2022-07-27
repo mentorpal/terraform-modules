@@ -1,0 +1,22 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:us-east-1:000000000000:slack-cicd-alerts:458f3e5c-7943-48e4-9446-90b0bfe5ec6c",
+      "Sns": {
+        "Type": "Notification",
+        "MessageId": "24d59cdb-21ed-5b1f-9407-c780296a9766",
+        "TopicArn": "arn:aws:sns:us-east-1:000000000000:slack-cicd-alerts",
+        "Subject": null,
+        "Message": "{\"version\":\"0\",\"id\":\"dc4f58cb-758f-3a80-1f0b-3532f39edac6\",\"detail-type\":\"CodePipeline Action Execution State Change\",\"source\":\"aws.codepipeline\",\"account\":\"000000000000\",\"time\":\"2022-07-27T09:32:49Z\",\"region\":\"us-east-1\",\"resources\":[\"arn:aws:codepipeline:us-east-1:000000000000:mentor-home-page-dev-cicd-pipeline\"],\"detail\":{\"pipeline\":\"mentor-home-page-dev-cicd-pipeline\",\"execution-id\":\"a713dc63-5fd7-460b-9947-5fbffbc760c8\",\"stage\":\"Build\",\"execution-result\":{\"external-execution-url\":\"https://console.aws.amazon.com/codebuild/home?region=us-east-1#/builds/mentor-home-page-devandqa-build:a773581c-164f-4961-ac73-bcd459252654/view/new\",\"external-execution-id\":\"mentor-home-page-devandqa-build:a773581c-164f-4961-ac73-bcd459252654\"},\"output-artifacts\":[{\"name\":\"build_output_dev\",\"s3location\":{\"bucket\":\"mentor-home-page-cicd-bucket\",\"key\":\"mentor-home-page-dev/build_outp/cRHV6NT\"}}],\"action\":\"Build\",\"state\":\"SUCCEEDED\",\"region\":\"us-east-1\",\"type\":{\"owner\":\"AWS\",\"provider\":\"CodeBuild\",\"category\":\"Build\",\"version\":\"1\"},\"version\":2.0}}",
+        "Timestamp": "2022-07-27T09:32:55.091Z",
+        "SignatureVersion": "1",
+        "Signature": "VZfSYPxZx4TKtYrXXSaEMdcX2ZJ+LhZrjm1u62+bJBCnhdSDi7B1QRp62VdQhODXkqd6Zr3gc5deynoAEmx7p46Ht8APIKUXnlu4H11QXtK3FrcivFqON53OfUT9Rf2KocGGwKgtiqHfGTGFhX5D++jDiBCHDXi0lZTpkM3wOcj5UT/yi7C13EOlEGfYOHTmkoEmMSGHWfwGaAlUpczqutGjS9ljhHPPZgpNouIhmeiYTuVifQpPvecy2JwDZIb80Go8Lad5itaeiTaYshxXl85PDow7leaXAfuiIjUO9F+/z2sHPYYg79KyYiB6qwU3Jjlf+qXmzq+thPuS0jq5Kg==",
+        "SigningCertUrl": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+        "UnsubscribeUrl": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:000000000000:slack-cicd-alerts:458f3e5c-7943-48e4-9446-90b0bfe5ec6c",
+        "MessageAttributes": {}
+      }
+    }
+  ]
+}
