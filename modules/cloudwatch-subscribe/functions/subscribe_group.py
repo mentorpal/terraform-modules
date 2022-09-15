@@ -21,6 +21,8 @@ def should_subscribe(log_group_name: str) -> bool:
     :param log_group_name: name of log group
     :returns: boolean
     """
+    if 'dev' in log_group_name:
+        return False
     if log_group_name.startswith("/aws/lambda/"):
         return True
     if log_group_name.startswith("API-Gateway-Execution-Logs"):
