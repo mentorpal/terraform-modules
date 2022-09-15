@@ -97,7 +97,7 @@ module "slack_notifier" {
   publish = true
 
   environment_variables = {
-    LOG_EVENTS        = "True" # allow this function to log events for debugging
+    LOG_EVENTS        = "False"
     SLACK_WEBHOOK_URL = var.slack_webhook_url
     SLACK_CHANNEL     = var.slack_channel
     SLACK_USERNAME    = var.slack_username

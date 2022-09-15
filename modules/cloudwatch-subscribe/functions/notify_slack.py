@@ -185,6 +185,7 @@ def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> str:
         log_data = zlib.decompress(base64.b64decode(event["awslogs"]["data"]), 16 + zlib.MAX_WBITS)
         # json.loads(zlib.decompress(base64.b64decode(event['awslogs']['data']), zlib.MAX_WBITS | 32))
         log_data = log_data.decode("utf-8")
+        logging.info(log_data)
         msg = json.loads(log_data)
     except Exception as e:
         logging.error(f"Error parsing event data - `{e}`")
@@ -205,7 +206,6 @@ def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> str:
 
 # for local debugging:
 if __name__ == "__main__":
-    # with open("aws/modules/cloudwatch-subscribe/functions/awslogs-event.json") as f:
-    with open("aws/modules/cloudwatch-subscribe/functions/awslogs-event-decoded.json") as f:
+    with open("modules/cloudwatch-subscribe/functions/awslogs-event.json") as f:
         event = json.loads(f.read())
         lambda_handler(event, {})
