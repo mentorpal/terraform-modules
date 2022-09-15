@@ -30,6 +30,10 @@ def format_cloudwatch_filter_event(message: Dict[str, Any], region: str) -> Dict
 
     title = f"Error in CloudWatch logGroup {message['logGroup']}"
     event = message['logEvents'][0]
+    url = f"https://{region}.console.aws.amazon.com/cloudwatch/home?region={region}#logsV2:log-groups"
+    url += f"/log-group/{urllib.parse.quote_plus(message['logGroup'])}"
+    url += f"/log-events/{urllib.parse.quote_plus(message['logStream'])}"
+
     return {
         "color": "danger",
         "text": title,
@@ -39,6 +43,11 @@ def format_cloudwatch_filter_event(message: Dict[str, Any], region: str) -> Dict
             {
                 "title": "Log Group",
                 "value": f"`{message['logGroup']}`",
+                "short": False,
+            },
+            {
+                "title": "URL",
+                "value": url,
                 "short": False,
             },
             {
@@ -204,8 +213,8 @@ def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> str:
 
     return json.dumps(response)
 
-# for local debugging:
-if __name__ == "__main__":
-    with open("modules/cloudwatch-subscribe/functions/awslogs-event.json") as f:
-        event = json.loads(f.read())
-        lambda_handler(event, {})
+# # for local debugging:
+# if __name__ == "__main__":
+#     with open("modules/cloudwatch-subscribe/functions/awslogs-event.json") as f:
+#         event = json.loads(f.read())
+#         lambda_handler(event, {})
