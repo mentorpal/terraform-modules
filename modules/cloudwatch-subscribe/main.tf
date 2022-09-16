@@ -4,8 +4,8 @@
 ###
 
 locals {
-  lambda_subscriber_name = "cw-log-groups-auto-subscriber"
-  lambda_notifier_name   = "cw-logs-error-slack-notifier"
+  lambda_subscriber_name = "cw-log-groups-auto-subscriber-${var.env}"
+  lambda_notifier_name   = "cw-logs-error-slack-notifier-${var.env}"
 }
 
 data "aws_iam_policy_document" "lambda" {
@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "lambda" {
 }
 
 resource "aws_cloudwatch_event_rule" "log_groups" {
-  name        = "capture-new-log-group-created"
+  name        = "capture-new-log-group-created-${var.env}"
   description = "Capture log group creation"
 
   event_pattern = <<PATTERN
