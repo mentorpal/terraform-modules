@@ -11,7 +11,7 @@ resource "aws_wafv2_ip_set" "amazon_whitelist_ipv4" {
   count              = var.disable_bot_protection_for_amazon_ips ? 1 : 0
   name               = "${var.name}-amazon-ipv4"
   description        = "Amazon IPv4 addresses"
-  scope              = "REGIONAL"
+  scope              = var.scope #REGIONAL or CLOUDFRONT
   ip_address_version = "IPV4"
   addresses          = data.aws_ip_ranges.mentor_us_regions.cidr_blocks
   tags               = var.tags
@@ -21,7 +21,7 @@ resource "aws_wafv2_ip_set" "amazon_whitelist_ipv6" {
   count              = var.disable_bot_protection_for_amazon_ips ? 1 : 0
   name               = "${var.name}-amazon-ipv6"
   description        = "Amazon IPv6 addresses"
-  scope              = "REGIONAL"
+  scope              = var.scope #REGIONAL or CLOUDFRONT
   ip_address_version = "IPV6"
   addresses          = data.aws_ip_ranges.mentor_us_regions.ipv6_cidr_blocks
   tags               = var.tags
