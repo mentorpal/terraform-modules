@@ -27,6 +27,17 @@ resource "aws_wafv2_ip_set" "amazon_whitelist_ipv6" {
   tags               = var.tags
 }
 
+resource "aws_wafv2_regex_pattern_set" "uri_regex_set"{
+  name="${var.name}-uri-regex-set"
+  scope = "REGIONAL"
+  dynamic "regular_expression" {
+    for_each = var.allowed_uri_regex_set
+    content {
+       regex_string = regular_expression.value
+    }
+  }
+}
+
 resource "aws_wafv2_web_acl" "wafv2_webacl" {
   name  = "${var.name}-wafv2-webacl"
   scope = var.scope
@@ -89,6 +100,36 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       cloudwatch_metrics_enabled = true
       metric_name                = "AWS-Common-rule"
       sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "uri-regex-match"
+    priority = 3
+    action {
+      block {}
+    }
+    statement {
+      not_statement {
+        statement {
+          regex_pattern_set_reference_statement {
+            arn = aws_wafv2_regex_pattern_set.uri_regex_set.arn
+            field_to_match {
+              uri_path {
+              }
+            }
+            text_transformation {
+              priority = 0
+              type = "NONE"
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "${var.rate_limit}-ip-rate-limit-rule"
+      sampled_requests_enabled   = false
     }
   }
 

@@ -51,3 +51,9 @@ variable "disable_bot_protection_for_amazon_ips" {
   default     = false
   description = "should firewall exclude amazon ip range from bot protection rules"
 }
+
+variable "allowed_uri_regex_set" {
+  type = list(string)
+  default = ["^.*"]
+  description = "a list of uri regex patterns to allow"
+}
