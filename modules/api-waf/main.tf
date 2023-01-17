@@ -139,11 +139,15 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       name     = "IpSetRule-Whitelist-Amazon-IPv4"
       priority = "4"
       action {
-        allow {}
+        block {}
       }
       statement {
-        ip_set_reference_statement {
-          arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
+        not_statement{
+          statement{
+            ip_set_reference_statement {
+              arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
+            }
+          }
         }
       }
 
@@ -161,11 +165,15 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       name     = "IpSetRule-Whitelist-Amazon-IPv6"
       priority = "6"
       action {
-        allow {}
+        block {}
       }
       statement {
-        ip_set_reference_statement {
-          arn = aws_wafv2_ip_set.amazon_whitelist_ipv6[0].arn
+        not_statement{
+          statement{
+            ip_set_reference_statement {
+              arn = aws_wafv2_ip_set.amazon_whitelist_ipv6[0].arn
+            }
+          }
         }
       }
 
