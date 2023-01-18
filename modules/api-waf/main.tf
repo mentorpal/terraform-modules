@@ -143,6 +143,7 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       }
       statement {
         not_statement{
+          statement{
           and_statement{
             statement{
               ip_set_reference_statement {
@@ -154,6 +155,7 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
                 arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
               }
             }
+          }
           }
         }
       }
