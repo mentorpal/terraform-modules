@@ -8,7 +8,6 @@ locals {
 }
 
 resource "aws_wafv2_ip_set" "amazon_whitelist_ipv4" {
-  count              = var.disable_bot_protection_for_amazon_ips ? 1 : 0
   name               = "${var.name}-amazon-ipv4"
   description        = "Amazon IPv4 addresses"
   scope              = var.scope #REGIONAL or CLOUDFRONT
@@ -18,7 +17,6 @@ resource "aws_wafv2_ip_set" "amazon_whitelist_ipv4" {
 }
 
 resource "aws_wafv2_ip_set" "amazon_whitelist_ipv6" {
-  count              = var.disable_bot_protection_for_amazon_ips ? 1 : 0
   name               = "${var.name}-amazon-ipv6"
   description        = "Amazon IPv6 addresses"
   scope              = var.scope #REGIONAL or CLOUDFRONT
@@ -27,13 +25,13 @@ resource "aws_wafv2_ip_set" "amazon_whitelist_ipv6" {
   tags               = var.tags
 }
 
-resource "aws_wafv2_regex_pattern_set" "uri_regex_set"{
-  name="${var.name}-uri-regex-set"
+resource "aws_wafv2_regex_pattern_set" "uri_regex_set" {
+  name  = "${var.name}-uri-regex-set"
   scope = "REGIONAL"
   dynamic "regular_expression" {
     for_each = var.allowed_uri_regex_set
     content {
-       regex_string = regular_expression.value
+      regex_string = regular_expression.value
     }
   }
 }
@@ -56,7 +54,6 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
   rule {
     name     = "ip-rate-limit-rule"
     priority = 1
-
     action {
       block {}
     }
@@ -120,7 +117,7 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
             }
             text_transformation {
               priority = 0
-              type = "NONE"
+              type     = "NONE"
             }
           }
         }
@@ -189,6 +186,26 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
         # see https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-bot.html
         name        = "AWSManagedRulesBotControlRuleSet"
         vendor_name = "AWS"
+
+        scope_down_statement {
+          not_statement {
+            statement {
+              byte_match_statement {
+                field_to_match {
+                  single_header {
+                    name = var.secret_header_name
+                  }
+                }
+                positional_constraint = "EXACTLY"
+                search_string         = var.secret_header_value
+                text_transformation {
+                  type     = "NONE"
+                  priority = 0
+                }
+              }
+            }
+          }
+        }
 
         dynamic "excluded_rule" {
           for_each = var.excluded_bot_rules
