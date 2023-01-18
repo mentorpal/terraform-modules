@@ -136,6 +136,7 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
   dynamic "rule" {
     for_each = local.ipwhitelist
     content {
+      count = aws_wafv2_ip_set.amazon_whitelist_ipv4.count
       name     = "IpSetRule-Whitelist-Amazon-IPv4"
       priority = "4"
       action {
@@ -158,6 +159,7 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
   dynamic "rule" {
     for_each = local.ipwhitelist
     content {
+      count = aws_wafv2_ip_set.amazon_whitelist_ipv6.count
       name     = "IpSetRule-Whitelist-Amazon-IPv6"
       priority = "6"
       action {
