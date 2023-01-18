@@ -136,33 +136,42 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
   dynamic "rule" {
     for_each = local.ipwhitelist
     content {
-      name     = "IpSetRule-Whitelist-Amazon-IPv4-IPv6"
-      priority = "5"
+      name     = "IpSetRule-Whitelist-Amazon-IPv4"
+      priority = "4"
       action {
-        block {}
+        allow {}
       }
       statement {
-        not_statement{
-          statement{
-          and_statement{
-            statement{
-              ip_set_reference_statement {
-                arn = aws_wafv2_ip_set.amazon_whitelist_ipv6[0].arn
-              }
-            }
-            statement{
-              ip_set_reference_statement {
-                arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
-              }
-            }
-          }
-          }
+        ip_set_reference_statement {
+          arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
         }
       }
 
       visibility_config {
         cloudwatch_metrics_enabled = false
         metric_name                = "AWS-IPv4"
+        sampled_requests_enabled   = true
+      }
+    }
+  }
+
+  dynamic "rule" {
+    for_each = local.ipwhitelist
+    content {
+      name     = "IpSetRule-Whitelist-Amazon-IPv6"
+      priority = "6"
+      action {
+        allow {}
+      }
+      statement {
+        ip_set_reference_statement {
+          arn = aws_wafv2_ip_set.amazon_whitelist_ipv6[0].arn
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = false
+        metric_name                = "AWS-IPv6"
         sampled_requests_enabled   = true
       }
     }
