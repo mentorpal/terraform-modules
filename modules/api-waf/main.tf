@@ -8,7 +8,6 @@ locals {
 }
 
 resource "aws_wafv2_ip_set" "amazon_whitelist_ipv4" {
-  count              = var.disable_bot_protection_for_amazon_ips ? 1 : 0
   name               = "${var.name}-amazon-ipv4"
   description        = "Amazon IPv4 addresses"
   scope              = var.scope #REGIONAL or CLOUDFRONT
@@ -18,7 +17,6 @@ resource "aws_wafv2_ip_set" "amazon_whitelist_ipv4" {
 }
 
 resource "aws_wafv2_ip_set" "amazon_whitelist_ipv6" {
-  count              = var.disable_bot_protection_for_amazon_ips ? 1 : 0
   name               = "${var.name}-amazon-ipv6"
   description        = "Amazon IPv6 addresses"
   scope              = var.scope #REGIONAL or CLOUDFRONT
@@ -56,7 +54,6 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
   rule {
     name     = "ip-rate-limit-rule"
     priority = 1
-
     action {
       block {}
     }
@@ -136,7 +133,6 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
   dynamic "rule" {
     for_each = local.ipwhitelist
     content {
-      count = aws_wafv2_ip_set.amazon_whitelist_ipv4.count
       name     = "IpSetRule-Whitelist-Amazon-IPv4"
       priority = "4"
       action {
@@ -159,7 +155,6 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
   dynamic "rule" {
     for_each = local.ipwhitelist
     content {
-      count = aws_wafv2_ip_set.amazon_whitelist_ipv6.count
       name     = "IpSetRule-Whitelist-Amazon-IPv6"
       priority = "6"
       action {
