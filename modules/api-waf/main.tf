@@ -187,6 +187,26 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
         name        = "AWSManagedRulesBotControlRuleSet"
         vendor_name = "AWS"
 
+        scope_down_statement {
+              not_statement {
+                statement {
+                  byte_match_statement {
+                    field_to_match {
+                      single_header {
+                        name = var.secret_header_name
+                      }
+                    }
+                    positional_constraint = "EXACTLY"
+                    search_string = var.secret_header_value
+                    text_transformation {
+                      type = "NONE"
+                      priority = 0
+                    }
+                  }
+                }
+              }
+        }
+
         dynamic "excluded_rule" {
           for_each = var.excluded_bot_rules
           content {

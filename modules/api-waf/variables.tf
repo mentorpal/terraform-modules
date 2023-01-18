@@ -57,3 +57,12 @@ variable "allowed_uri_regex_set" {
   default = ["^.*"]
   description = "a list of uri regex patterns to allow"
 }
+
+variable "secret_header_name" {
+  type = string
+  description = "name of passthrough header"
+}
+
+variable "secret_header_value" {
+  type = string
+}
