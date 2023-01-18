@@ -53,13 +53,13 @@ variable "disable_bot_protection_for_amazon_ips" {
 }
 
 variable "allowed_uri_regex_set" {
-  type = list(string)
-  default = ["^.*"]
+  type        = list(string)
+  default     = ["^.*"]
   description = "a list of uri regex patterns to allow"
 }
 
 variable "secret_header_name" {
-  type = string
+  type        = string
   description = "name of passthrough header"
 }
 
