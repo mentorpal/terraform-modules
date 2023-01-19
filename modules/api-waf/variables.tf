@@ -46,7 +46,7 @@ variable "enable_logging" {
   description = "create s3 bucket to store firewall logs, and a kinesis stream to deliver them"
 }
 
-variable "disable_bot_protection_for_amazon_ips" {
+variable "enable_ip_and_origin_whitelisting" {
   type        = bool
   default     = false
   description = "should firewall exclude amazon ip range from bot protection rules"
@@ -64,5 +64,9 @@ variable "secret_header_name" {
 }
 
 variable "secret_header_value" {
+  type = string
+}
+
+variable "allowed_origin" {
   type = string
 }
