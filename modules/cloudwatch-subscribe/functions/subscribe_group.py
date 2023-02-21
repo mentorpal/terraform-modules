@@ -21,6 +21,12 @@ def should_subscribe(log_group_name: str) -> bool:
     :param log_group_name: name of log group
     :returns: boolean
     """
+
+    # it must not subscribe itself, otherwise it will go into an infinite loop
+    exclude_list = os.environ.get("EXCLUDE").split(",")
+    for fn in exclude_list:
+        if fn in log_group_name:
+            return False
     if 'dev' in log_group_name:
         return False
     if log_group_name.startswith("/aws/lambda/"):

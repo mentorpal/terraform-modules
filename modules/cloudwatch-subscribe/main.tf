@@ -146,6 +146,7 @@ module "lambda_subscriber" {
   environment_variables = {
     LOG_EVENTS = "True" # allow this function to log events for debugging
     TARGET_ARN = module.slack_notifier.lambda_function_arn
+    EXCLUDE    = "${local.lambda_notifier_name},${local.lambda_subscriber_name}"
   }
 
   # Do not use Lambda's policy for cloudwatch logs, because we have to add a policy
