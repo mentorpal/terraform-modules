@@ -138,59 +138,50 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       name     = "IpSetRule-Whitelist-Amazon-IPv4-IPv6"
       priority = "5"
       action {
-        block {}
+        allow {}
       }
-      statement {
 
-
-        not_statement{
+      statement{
+        or_statement{
           statement{
-          or_statement{
-            statement{
-              ip_set_reference_statement {
-                arn = aws_wafv2_ip_set.amazon_whitelist_ipv6[0].arn
-              }
+            ip_set_reference_statement {
+              arn = aws_wafv2_ip_set.amazon_whitelist_ipv6[0].arn
             }
-            statement{
-              ip_set_reference_statement {
-                arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
-              }
-            }
-            statement{
-              byte_match_statement {
-                field_to_match {
-                  single_header {
-                    name = "origin"
-                  }
-                }
-                positional_constraint = "CONTAINS"
-                search_string         = var.allowed_origin
-                text_transformation {
-                  type     = "NONE"
-                  priority = 0
-                }
-              }
-            }
-
-            # Scope down
-            statement {
-              byte_match_statement {
-                field_to_match {
-                  single_header {
-                    name = var.secret_header_name
-                  }
-                }
-                positional_constraint = "EXACTLY"
-                search_string         = var.secret_header_value
-                text_transformation {
-                  type     = "NONE"
-                  priority = 0
-                }
-              }
-            }
-
-            
           }
+          statement{
+            ip_set_reference_statement {
+              arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
+            }
+          }
+          statement{
+            byte_match_statement {
+              field_to_match {
+                single_header {
+                  name = "origin"
+                }
+              }
+              positional_constraint = "CONTAINS"
+              search_string         = var.allowed_origin
+              text_transformation {
+                type     = "NONE"
+                priority = 0
+              }
+            }
+          }
+          statement {
+            byte_match_statement {
+              field_to_match {
+                single_header {
+                  name = var.secret_header_name
+                }
+              }
+              positional_constraint = "EXACTLY"
+              search_string         = var.secret_header_value
+              text_transformation {
+                type     = "NONE"
+                priority = 0
+              }
+            }
           }
         }
       }
