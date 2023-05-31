@@ -141,6 +141,8 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
         block {}
       }
       statement {
+
+
         not_statement{
           statement{
           or_statement{
@@ -169,6 +171,25 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
                 }
               }
             }
+
+            # Scope down
+            statement {
+              byte_match_statement {
+                field_to_match {
+                  single_header {
+                    name = var.secret_header_name
+                  }
+                }
+                positional_constraint = "EXACTLY"
+                search_string         = var.secret_header_value
+                text_transformation {
+                  type     = "NONE"
+                  priority = 0
+                }
+              }
+            }
+
+            
           }
           }
         }
