@@ -70,3 +70,9 @@ variable "secret_header_value" {
 variable "allowed_origin" {
   type = string
 }
+
+variable "blocked_headers" {
+  description = "Map of headers and their blocked values"
+  type        = map(list(string))
+  default     = {}
+}

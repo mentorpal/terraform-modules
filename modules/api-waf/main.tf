@@ -251,6 +251,54 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       sampled_requests_enabled   = true
     }
   }
+
+  dynamic "rule" {
+    for_each = length(var.blocked_headers) > 0 ? [1] : []
+    content {
+      name     = "block-specific-header-values"
+      priority = 15
+
+      action {
+        block {}
+      }
+
+      statement {
+        or_statement {
+          dynamic "statement" {
+            for_each = flatten([
+              for header, values in var.blocked_headers : [
+                for value in values : {
+                  header = header
+                  value  = value
+                }
+              ]
+            ])
+            content {
+              byte_match_statement {
+                field_to_match {
+                  single_header {
+                    name = statement.value.header
+                  }
+                }
+                positional_constraint = "CONTAINS"
+                search_string         = statement.value.value
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
+              }
+            }
+          }
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "block-specific-header-values"
+        sampled_requests_enabled   = true
+      }
+    }
+  }
 }
 
 resource "aws_s3_bucket" "s3_logs" {
