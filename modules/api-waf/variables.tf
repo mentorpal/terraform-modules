@@ -67,8 +67,8 @@ variable "secret_header_value" {
   type = string
 }
 
-variable "allowed_origin" {
-  type = string
+variable "allowed_origins" {
+  type = list(string)
 }
 
 variable "blocked_headers" {
