@@ -156,24 +156,20 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
                 arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
               }
             }
-            statement {
-              or_statement {
-                dynamic "statement" {
-                  for_each = var.allowed_origins
-                  content {
-                    byte_match_statement {
-                      field_to_match {
-                        single_header {
-                          name = "origin"
-                        }
-                      }
-                      positional_constraint = "CONTAINS"
-                      search_string         = statement.value
-                      text_transformation {
-                        type     = "NONE"
-                        priority = 0
-                      }
+            dynamic "statement" {
+              for_each = var.allowed_origins
+              content {
+                byte_match_statement {
+                  field_to_match {
+                    single_header {
+                      name = "origin"
                     }
+                  }
+                  positional_constraint = "CONTAINS"
+                  search_string         = statement.value
+                  text_transformation {
+                    type     = "NONE"
+                    priority = 0
                   }
                 }
               }
