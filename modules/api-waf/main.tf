@@ -14,7 +14,7 @@ resource "aws_wafv2_ip_set" "amazon_whitelist_ipv4" {
   ip_address_version = "IPV4"
   addresses          = data.aws_ip_ranges.mentor_us_regions.cidr_blocks
   tags               = var.tags
-  count = 1
+  count              = 1
 }
 
 resource "aws_wafv2_ip_set" "amazon_whitelist_ipv6" {
@@ -24,7 +24,7 @@ resource "aws_wafv2_ip_set" "amazon_whitelist_ipv6" {
   ip_address_version = "IPV6"
   addresses          = data.aws_ip_ranges.mentor_us_regions.ipv6_cidr_blocks
   tags               = var.tags
-  count = 1
+  count              = 1
 }
 
 resource "aws_wafv2_regex_pattern_set" "uri_regex_set" {
@@ -143,57 +143,57 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       statement {
 
 
-        not_statement{
-          statement{
-          or_statement{
-            statement{
-              ip_set_reference_statement {
-                arn = aws_wafv2_ip_set.amazon_whitelist_ipv6[0].arn
+        not_statement {
+          statement {
+            or_statement {
+              statement {
+                ip_set_reference_statement {
+                  arn = aws_wafv2_ip_set.amazon_whitelist_ipv6[0].arn
+                }
               }
-            }
-            statement{
-              ip_set_reference_statement {
-                arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
+              statement {
+                ip_set_reference_statement {
+                  arn = aws_wafv2_ip_set.amazon_whitelist_ipv4[0].arn
+                }
               }
-            }
-            dynamic "statement" {
-              for_each = var.allowed_origins
-              content {
+              dynamic "statement" {
+                for_each = var.allowed_origins
+                content {
+                  byte_match_statement {
+                    field_to_match {
+                      single_header {
+                        name = "origin"
+                      }
+                    }
+                    positional_constraint = "CONTAINS"
+                    search_string         = statement.value
+                    text_transformation {
+                      type     = "NONE"
+                      priority = 0
+                    }
+                  }
+                }
+              }
+
+              # Scope down
+              statement {
                 byte_match_statement {
                   field_to_match {
                     single_header {
-                      name = "origin"
+                      name = var.secret_header_name
                     }
                   }
-                  positional_constraint = "CONTAINS"
-                  search_string         = statement.value
+                  positional_constraint = "EXACTLY"
+                  search_string         = var.secret_header_value
                   text_transformation {
                     type     = "NONE"
                     priority = 0
                   }
                 }
               }
-            }
 
-            # Scope down
-            statement {
-              byte_match_statement {
-                field_to_match {
-                  single_header {
-                    name = var.secret_header_name
-                  }
-                }
-                positional_constraint = "EXACTLY"
-                search_string         = var.secret_header_value
-                text_transformation {
-                  type     = "NONE"
-                  priority = 0
-                }
-              }
-            }
 
-            
-          }
+            }
           }
         }
       }
