@@ -17,7 +17,7 @@ module "build" {
   local_cache_modes   = var.build_local_cache_modes
   cache_type          = var.build_cache_type
 
-  extra_permissions = ["codestar-connections:UseConnection"]
+  extra_permissions = ["codestar-connections:UseConnection", "codeconnections:UseConnection"]
 }
 
 module "deploy_staging" {
