@@ -186,6 +186,7 @@ resource "aws_iam_policy" "deploy" {
         "iam:DeleteRole",
         "iam:PutRolePolicy",
         "iam:PassRole",
+        "iam:TagRole",
         "route53:ListHostedZones",
         "route53:ChangeResourceRecordSets",
         "acm:ListCertificates"
