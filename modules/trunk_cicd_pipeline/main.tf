@@ -247,7 +247,8 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
     {
       "Effect": "Allow",
       "Action": [
-        "codestar-connections:UseConnection"
+        "codestar-connections:UseConnection",
+        "codeconnections:UseConnection"
       ],
       "Resource": [
         "${var.codestar_connection_arn}"
