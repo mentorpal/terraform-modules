@@ -203,7 +203,7 @@ resource "aws_codepipeline" "pipeline" {
 }
 
 resource "aws_iam_role" "codepipeline_role" {
-  name        = "${var.project_name}-codepipeline"
+  name        = "CICD-${var.project_name}-codepipeline"
   description = "IAM role for CICD codepipeline for project ${var.project_name}"
   tags        = var.tags
 
@@ -224,7 +224,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "codepipeline_policy" {
-  name = "${var.project_name}-codepipeline"
+  name = "CICD-${var.project_name}-codepipeline"
   role = aws_iam_role.codepipeline_role.id
 
   policy = <<EOF
@@ -260,7 +260,7 @@ EOF
 }
 
 resource "aws_iam_policy" "s3_pipeline_access" {
-  name        = "${var.project_name}-CicdS3Access"
+  name        = "CICD-${var.project_name}-CicdS3Access"
   description = "Grant access to S3 for CICD pipeline for ${var.project_name}"
   # need to add two resources, bucket itself and objects inside:
   policy = <<EOF
@@ -281,7 +281,7 @@ EOF
 }
 
 resource "aws_iam_policy" "ssm_read_access" {
-  name        = "${var.project_name}-CicdSsmReadAccess"
+  name        = "CICD-${var.project_name}-CicdSsmReadAccess"
   description = "Grant read only access to SSM for CICD pipeline for ${var.project_name}"
   policy      = <<EOF
 {
@@ -309,7 +309,7 @@ EOF
 
 resource "aws_iam_policy" "ecr_get_access" {
   count       = var.docker_builds ? 1 : 0
-  name        = "${var.project_name}-cicd-ecr-get-access"
+  name        = "CICD-${var.project_name}-cicd-ecr-get-access"
   description = "Allows pipeline for ${var.project_name} to download ECR images"
   policy      = <<EOF
 {
@@ -336,7 +336,7 @@ EOF
 }
 
 resource "aws_iam_policy" "create_test_report" {
-  name        = "${var.project_name}-CicdCreateTestReport"
+  name        = "CICD-${var.project_name}-CicdCreateTestReport"
   description = "Allow CICD pipeline for ${var.project_name} creating test reports"
   policy      = <<EOF
 {
@@ -358,7 +358,7 @@ EOF
 }
 
 resource "aws_iam_policy" "deploy" {
-  name        = "${var.project_name}-deploy"
+  name        = "CICD-${var.project_name}-deploy"
   description = "Allow CICD deploy for ${var.project_name} to manage resources"
   policy      = <<EOF
 {
