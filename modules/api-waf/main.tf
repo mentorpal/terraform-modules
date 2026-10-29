@@ -29,7 +29,7 @@ resource "aws_wafv2_ip_set" "amazon_whitelist_ipv6" {
 
 resource "aws_wafv2_regex_pattern_set" "uri_regex_set" {
   name  = "${var.name}-uri-regex-set"
-  scope = "REGIONAL"
+  scope = var.scope
   dynamic "regular_expression" {
     for_each = var.allowed_uri_regex_set
     content {
