@@ -133,6 +133,40 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
   }
 
   dynamic "rule" {
+    for_each = var.max_query_size != null ? [var.max_query_size] : []
+    content {
+      name     = "query-string-size-limit"
+      priority = 4
+
+      action {
+        block {}
+      }
+
+      statement {
+        size_constraint_statement {
+          comparison_operator = "GT"
+          size                = rule.value
+
+          field_to_match {
+            query_string {}
+          }
+
+          text_transformation {
+            priority = 0
+            type     = "NONE"
+          }
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "query-string-size-limit"
+        sampled_requests_enabled   = true
+      }
+    }
+  }
+
+  dynamic "rule" {
     for_each = local.ipwhitelist
     content {
       name     = "IpSetRule-Whitelist-Amazon-IPv4-IPv6"
