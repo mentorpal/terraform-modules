@@ -29,7 +29,7 @@ resource "aws_wafv2_ip_set" "amazon_whitelist_ipv6" {
 
 resource "aws_wafv2_regex_pattern_set" "uri_regex_set" {
   name  = "${var.name}-uri-regex-set"
-  scope = "REGIONAL"
+  scope = var.scope
   dynamic "regular_expression" {
     for_each = var.allowed_uri_regex_set
     content {
@@ -129,6 +129,40 @@ resource "aws_wafv2_web_acl" "wafv2_webacl" {
       cloudwatch_metrics_enabled = false
       metric_name                = "${var.rate_limit}-ip-rate-limit-rule"
       sampled_requests_enabled   = false
+    }
+  }
+
+  dynamic "rule" {
+    for_each = var.max_query_size != null ? [var.max_query_size] : []
+    content {
+      name     = "query-string-size-limit"
+      priority = 4
+
+      action {
+        block {}
+      }
+
+      statement {
+        size_constraint_statement {
+          comparison_operator = "GT"
+          size                = rule.value
+
+          field_to_match {
+            query_string {}
+          }
+
+          text_transformation {
+            priority = 0
+            type     = "NONE"
+          }
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "query-string-size-limit"
+        sampled_requests_enabled   = true
+      }
     }
   }
 

@@ -76,3 +76,9 @@ variable "blocked_headers" {
   type        = map(list(string))
   default     = {}
 }
+
+variable "max_query_size" {
+  type        = number
+  default     = null
+  description = "Maximum allowed URI query string size in bytes. When set, requests with a larger query string are blocked. When unset, the query-size rule is not created."
+}
